@@ -1,11 +1,13 @@
 import os
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template
 from flaskApp import db, auth, blog, simple_pages
 from flaskApp.context_processors import utility_text_processors
+from flask_bootstrap import Bootstrap5
+
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
+    bootstrap=Bootstrap5(app)
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         # a default secret that should be overridden by instance config
@@ -35,7 +37,8 @@ def create_app(test_config=None):
     app.register_blueprint(auth.bp)
     app.register_blueprint(blog.bp)
     app.register_blueprint(simple_pages.bp)
-
+    bootstrap=Bootstrap5(app)
+    style=app.config['BOOTSTRAP_BOOTSWATCH_THEME']
 
     # make url_for('index') == url_for('blog.index')
     # in another app, you might define a separate main index here with
@@ -44,7 +47,6 @@ def create_app(test_config=None):
     app.add_url_rule("/", endpoint="index")
     app.context_processor(utility_text_processors)
 
-
     if __name__ == '__main__':
         port = int(os.environ.get("PORT", 5000))
         app.run(host='0.0.0.0', port=port)
@@ -52,6 +54,7 @@ def create_app(test_config=None):
 
 
 app = create_app()
+
 
 @app.errorhandler(404)
 # inbuilt function which takes error as parameter

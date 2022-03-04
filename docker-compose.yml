@@ -1,7 +1,7 @@
 version: "3.2"
 services:
   flask:
-    build: ../is219_flask_advanced-master
+    build: kc446/flaskbase
     environment:
       FLASK_ENV: "development"
     restart: always

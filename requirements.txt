@@ -1,4 +1,5 @@
 setuptools
+bootstrap-flask
 wheel
 Flask
 pytest-cov
