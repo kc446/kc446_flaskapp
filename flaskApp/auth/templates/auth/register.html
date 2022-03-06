@@ -13,17 +13,3 @@
     <input type="submit" value="Register">
   </form>
 {% endblock %}
-
-{% block javascript %}
-    <script>
-        window.addEventListener("load",function() {
-            function sendData() {
-                const XHR=new XMLHttpRequest();
-                const FD=new FormData(form);
-                XHR.addEventListener("load",function(event){
-                    console.log(event.target.responseText)
-                });
-            }
-        })
-    </script>
-{% endblock %}

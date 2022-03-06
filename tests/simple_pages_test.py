@@ -1,6 +1,5 @@
 """This test the homepage"""
 
-
 def test_request_main_menu_links(client):
     """This makes the index page"""
     response = client.get("/")
@@ -8,13 +7,11 @@ def test_request_main_menu_links(client):
     assert b'<li><a href="/page/about">About</a></li>' in response.data
     assert b'<li><a href="/page/welcome">Welcome</a></li>' in response.data
 
-
 def test_request_about(client):
     """This makes the index page"""
     response = client.get("/page/about")
     assert response.status_code == 200
     assert b"About Page" in response.data
-
 
 def test_request_welcome(client):
     """This makes the index page"""
