@@ -3,7 +3,7 @@ name: Development Workflow
 on:
   pull_request:
     branches:
-      - 'master'
+      - 'edit'
 
 jobs:
   run_pytest:
