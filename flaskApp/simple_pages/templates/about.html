@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
-{% block content %}
-    About Page
+{% block header %}
+  <h1>{% block title %}About{% endblock %}</h1>
+{% endblock %}
 
+{% block content %}
     {{ mymessage }}
 {% endblock %}

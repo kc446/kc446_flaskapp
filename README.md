@@ -30,7 +30,7 @@ app/dyno.
 
 #### Change GitHub Actions Workflows for Dev and Prod
 
--[ ] Change line 42 to have your docker repo address in: .github/workflows/prod.yml
+-[x] Change line 42 to have your docker repo address in: .github/workflows/prod.yml
 -[x] change lines 58 to have your heroku app name in: .github/workflows/prod.yml
 -[x] change line 59 to have your heroku email in: .github/workflows/prod.yml
 -[x] change line 31 to have your heroku app name in .github/workflows/dev.yml
