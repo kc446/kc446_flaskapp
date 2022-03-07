@@ -6,7 +6,7 @@
 
 [![Development Workflow](https://github.com/kc446/kc446_flaskapp/actions/workflows/dev.yml/badge.svg)](https://github.com/kc446/kc446_flaskapp/actions/workflows/dev.yml)
 
-* [Developmental Deployment](https://kc446-flaskapp.herokuapp.com/)
+* [Developmental Deployment](https://kc446-flaskapp-dev.herokuapp.com/)
 
 ## Setting up CI/CD
 
