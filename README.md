@@ -35,7 +35,7 @@ app/dyno.
 -[x] change line 59 to have your heroku email in: .github/workflows/prod.yml
 -[x] change line 31 to have your heroku app name in .github/workflows/dev.yml
 -[x] change line 32 to have your heroku email in .github/workflows/dev.yml
--[ ] Push your local repo and fix any errors that appear when the workflow is running. You can check the workflow in the
+-[x] Push your local repo and fix any errors that appear when the workflow is running. You can check the workflow in the
     actions.
 
 ## Running Locally
