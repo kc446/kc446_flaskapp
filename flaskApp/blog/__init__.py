@@ -1,14 +1,8 @@
-from flask import Blueprint
-from flask import flash
-from flask import g
-from flask import redirect
-from flask import render_template
-from flask import request
-from flask import url_for
+from flask import Blueprint, flash, g, redirect, render_template, request, url_for
 from werkzeug.exceptions import abort
 
 from flaskApp.auth import login_required
-from flaskApp.db import get_db
+from flaskApp.db import init_db
 
 bp = Blueprint("blog", __name__, template_folder='templates')
 
@@ -16,7 +10,7 @@ bp = Blueprint("blog", __name__, template_folder='templates')
 @bp.route("/")
 def index():
     """Show all the posts, most recent first."""
-    db = get_db()
+    db = init_db()
     posts = db.execute(
         "SELECT v.id, title, body, created, author_id, username"
         " FROM vendor v JOIN user u ON v.author_id = u.id"
@@ -38,7 +32,7 @@ def get_post(id, check_author=True):
     :raise 403: if the current user isn't the author
     """
     vendor = (
-        get_db()
+        init_db()
         .execute(
             "SELECT v.id, title, body, created, author_id, username"
             " FROM vendor v JOIN user u ON v.author_id = u.id"
