@@ -1,15 +1,12 @@
-{% extends 'base.html' %}
-
-{% block header %}
-  <h1>{% block title %}Log In{% endblock %}</h1>
-{% endblock %}
-
+{% extends "base.html" %}
 {% block content %}
-  <form method="post">
-    <label for="username">Username</label>
-    <input name="username" id="username" required>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
-    <input type="submit" value="Log In">
-  </form>
+
+    <div class="row mt-5">
+
+         <div class="col-4 border border-1 border-dark mx-auto p-4">
+             <h2>Login</h2>
+             {{ render_form(form) }}
+         </div>
+    </div>
+
 {% endblock %}

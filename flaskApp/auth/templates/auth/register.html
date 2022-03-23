@@ -1,15 +1,14 @@
-{% extends 'base.html' %}
-
-{% block header %}
-  <h1>{% block title %}Register{% endblock %}</h1>
-{% endblock %}
-
+{% extends "base.html" %}
 {% block content %}
-  <form method="post">
-    <label for="username">Username</label>
-    <input name="username" id="username" required>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
-    <input type="submit" value="Register">
-  </form>
+    {% from 'bootstrap5/form.html' import render_form, render_field, render_form_row %}
+
+    <div class="row">
+
+         <div class="col-7 mx-auto">
+             <h2>Register</h2>
+             {{ render_form(form) }}
+         </div>
+    </div>
+
+
 {% endblock %}
