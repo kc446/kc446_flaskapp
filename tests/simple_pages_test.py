@@ -17,7 +17,7 @@ def test_request_index(client):
     assert b"Index" in response.data
 
 def test_request_about(client):
-    """This makes the index page"""
+    """This makes the about page"""
     response = client.get("/about")
     assert response.status_code == 200
     assert b"About" in response.data
@@ -29,6 +29,6 @@ def test_request_page1(client):
     assert b"welcome" in response.data
 
 def test_request_page_not_found(client):
-    """This makes the index page"""
-    response = client.get("/page5")
+    """This makes the 404 page"""
+    response = client.get("/404")
     assert response.status_code == 404

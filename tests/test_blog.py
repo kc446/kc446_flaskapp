@@ -1,7 +1,5 @@
 import pytest
 
-from flaskApp.db import get_db
-
 
 def test_index(client, auth):
     response = client.get("/")
@@ -22,11 +20,14 @@ def test_login_required(client, path):
     assert response.headers["Location"] == "http://localhost/auth/login"
 
 
-def test_author_required(app, client, auth):
+    # to do: fix all these tests (even though this is the blog one it's still a test i gotta put in)
+
+
+def test_author_required(app):
     # change the post author to another user
     with app.app_context():
-        db = get_db()
-        db.execute("UPDATE vendor SET author_id = 2 WHERE id = 1")
+        db = init_db()
+        db.db("UPDATE vendor SET author_id = 2 WHERE id = 1")
         db.commit()
 
     auth.login()

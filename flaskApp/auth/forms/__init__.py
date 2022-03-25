@@ -6,48 +6,47 @@ from wtforms.fields import *
 class login_form(FlaskForm):
     email = EmailField('Email Address', [
         validators.DataRequired(),
-    ])
+        validators.Email()
+    ], description="You need an email address to sign in!")
 
     password = PasswordField('Password', [
         validators.DataRequired(),
         validators.length(min=6, max=35)
-    ])
+    ],description="You need a password to sign in!")
     submit = SubmitField()
 
 
 class register_form(FlaskForm):
     email = EmailField('Email Address', [
         validators.DataRequired(),
-
-    ], description="You need to signup with an email")
+        validators.Email()
+    ], description="You need an email address to sign up!")
 
     password = PasswordField('Create Password', [
         validators.DataRequired(),
-        validators.EqualTo('confirm', message='Passwords must match'),
-
-    ], description="Create a password ")
-    confirm = PasswordField('Repeat Password', description="Please retype your password to confirm it is correct")
+        validators.length(min=6, max=35),
+        validators.EqualTo('confirm', message='Passwords must match')
+    ], description="Create a password.")
+    confirm = PasswordField('Repeat Password', description="Please confirm your password.")
     submit = SubmitField()
 
 
 class profile_form(FlaskForm):
     about = TextAreaField('About', [validators.length(min=6, max=300)],
-                          description="Please add information about yourself")
-
+                          description="Tell us about yourself")
     submit = SubmitField()
 
 
 class security_form(FlaskForm):
     email = EmailField('Email Address', [
         validators.DataRequired(),
-
-    ], description="You can change your email address")
+        validators.Email()
+    ], description="Change your email address")
 
     password = PasswordField('Create Password', [
         validators.DataRequired(),
         validators.EqualTo('confirm', message='Passwords must match'),
-
-    ], description="Create a password ")
+        validators.length(min=6, max=35)
+    ], description="Create a password")
     confirm = PasswordField('Repeat Password', description="Please retype your password to confirm it is correct")
-
     submit = SubmitField()
