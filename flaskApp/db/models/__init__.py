@@ -1,9 +1,10 @@
 from datetime import datetime
 
+from flask_login import UserMixin
 from flask_login._compat import unicode
 from werkzeug.security import check_password_hash, generate_password_hash
+
 from flaskApp.db import db
-from flask_login import UserMixin
 
 
 class User(UserMixin, db.Model):

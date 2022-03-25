@@ -1,8 +1,8 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, url_for
 from werkzeug.exceptions import abort
 
-from flaskApp.auth import login_required
-from flaskApp.db import init_db
+from app.auth import login_required
+from app.db import init_db
 
 bp = Blueprint("blog", __name__, template_folder='templates')
 

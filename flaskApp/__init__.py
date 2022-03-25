@@ -1,36 +1,30 @@
 """A simple Flask web app."""
-from flask import Flask, render_template
+import os
+
+from flask import Flask
+from flask import render_template
 from flask_bootstrap import Bootstrap5
+from flask_login import (
+    LoginManager,
+)
 from flask_wtf.csrf import CSRFProtect
 
-import os
-from flaskApp import db, auth, blog, simple_pages
-from flaskApp.context_processors import utility_text_processors
-from flaskApp.simple_pages import simple_pages
-from flaskApp.exceptions import http_exceptions
-from flaskApp.db.models import User
-from flaskApp.db import db
+from flaskApp import db, auth, simple_pages
 from flaskApp.auth import auth
 from flaskApp.cli import create_database
-from flask_login import (
-    UserMixin,
-    login_user,
-    LoginManager,
-    current_user,
-    logout_user,
-    login_required,
-)
+from flaskApp.context_processors import utility_text_processors
+from flaskApp.db import db
+from flaskApp.db.models import User
+from flaskApp.simple_pages import simple_pages
 
 login_manager = LoginManager()
-
 
 def page_not_found(e):
     return render_template("404.html"), 404
 
-
-def create_app(test_config=None):
+def create_app():
     """Create and configure an instance of the Flask application."""
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__)
 
     app.secret_key = 'This is an INSECURE secret!! DO NOT use this in production!!'
     login_manager.init_app(app)
@@ -44,17 +38,6 @@ def create_app(test_config=None):
         # store the database in the instance folder
         DATABASE=os.path.join(app.instance_path, "flaskr.sqlite"),
     )
-    if test_config is None:
-        # load the instance config, if it exists, when not testing
-        app.config.from_pyfile("config.py", silent=True)
-    else:
-        # load the test config if passed in
-        app.config.update(test_config)
-
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
 
     @app.route("/hello")
     def hello():
@@ -70,8 +53,7 @@ def create_app(test_config=None):
 
     app.config['BOOTSTRAP_BOOTSWATCH_THEME'] = 'Simplex'
 
-    app.add_url_rule("/", endpoint="index")
-    app.context_processor(utility_text_processors)
+    # app.add_url_rule("/", endpoint="index")
 
     db_dir = "database/db.sqlite"
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///" + os.path.abspath(db_dir)
@@ -80,11 +62,7 @@ def create_app(test_config=None):
     db.init_app(app)
     app.cli.add_command(create_database)
 
-    if __name__ == '__main__':
-        port = int(os.environ.get("PORT", 5000))
-        app.run(host='0.0.0.0', port=port)
     return app
-
 
 @login_manager.user_loader
 def user_loader(user_id):
@@ -92,10 +70,3 @@ def user_loader(user_id):
         return User.query.get(int(user_id))
     except:
         return None
-
-
-app = create_app()
-
-
-
-
