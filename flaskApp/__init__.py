@@ -22,9 +22,9 @@ login_manager = LoginManager()
 def page_not_found(e):
     return render_template("404.html"), 404
 
-def create_app():
+def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
-    app = Flask(__name__)
+    app = Flask(__name__, instance_relative_config=True)
 
     logging.basicConfig(filename='logs/record.log', level=logging.DEBUG, format="f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s'")
 
@@ -42,6 +42,18 @@ def create_app():
         DATABASE=os.path.join(app.instance_path, "flaskr.sqlite"),
     )
 
+    if test_config is None:
+        # load the instance config, if it exists, when not testing
+        app.config.from_pyfile("config.py", silent=True)
+    else:
+        # load the test config if passed in
+        app.config.update(test_config)
+        # ensure the instance folder exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
+
     @app.route("/hello")
     def hello():
         return "Hello, World!"
@@ -51,8 +63,10 @@ def create_app():
     # apply the blueprints to the app
     app.register_blueprint(auth)
     app.register_blueprint(simple_pages)
-    app.context_processor(utility_text_processors)
     app.register_error_handler(404, page_not_found)
+
+    app.add_url_rule("/", endpoint="index")
+    app.context_processor(utility_text_processors)
 
     app.config['BOOTSTRAP_BOOTSWATCH_THEME'] = 'Lux'
 
@@ -65,6 +79,7 @@ def create_app():
 
     db.init_app(app)
     app.cli.add_command(create_database)
+
 
     return app
 
