@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block content %}
+    {% from 'bootstrap5/form.html' import render_form, render_field, render_form_row %}
+
+    <div class="row">
+        <div class="col-7">
+            <h2>Register</h2>
+            {{ render_form(form) }}
+        </div>
+        <div id="message" class="col-5">
+            <div id="letter" class="red">
+                Has lower case letter
+                <div class="progress">
+                    <div id="p-bar" class="progress-bar" style="width: 0%" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <style>
+        .invalid {
+            color: red;
+        }
+
+        .valid {
+            color: green;
+        }
+    </style>
+
+
+    <script>
+        var passField = document.getElementById("password");
+        var letter = document.getElementById("letter");
+        var lowerCase = 0;
+        var upperCase = 0;
+        var specialChara = 0;
+
+        passField.onfocus = function () {
+            var message = document.getElementById("message");
+            message.style.display = "block";
+            message.style.border = "1px solid";
+        }
+
+        passField.onkeyup = function () {
+            var progressBar = document.getElementById("p-bar");
+            // Validate lowercase letters
+            let lowerCaseLetters = /[a-z]/g;
+            let upperCaseLetters = /[A-Z]/g;
+            let specialCharacters = /[`~!@#$%^&*()_|+\-=?;:'",.<>{}]/g;
+            let newWidth;
+            let passMinLength = 6;
+            
+            console.log(passField.value);
+            
+            function Observable() {
+
+                specialChara.onChange(function(v){
+                    if (v === 0) {setProgressBarWidth(id, -25)}
+                    else {setProgressBarWidth(id,+25)}
+                })
+                
+                lowerCase.onChange(function (v){
+                    if (v === 0) {setProgressBarWidth(id,-25);}
+                    else {setProgressBarWidth(id,+25)}
+                })
+                
+                this.raiseChangedEvent = function(v){
+                    if (this.valueChangedCallback) {this.valueChangedCallback(v);}
+                }
+            }
+            
+            while (passField.value >= passMinLength) {passLength= 1;}
+
+            // lowercase letters
+            if(lowerCase === 0) {
+                let pBarWidth = progressBar.style.width;
+                let currentWidth = parseInt(pBarWidth.substring(0, pBarWidth.length - 1));
+                currentWidth = currentWidth + 25;
+                let newWidthString = currentWidth.toString();
+                newWidth = newWidthString.concat("%");
+                console.log(newWidth);
+            } else {newWidth = progressBar.style.width;}
+
+            if (passField.value.match(lowerCaseLetters)) {
+                progressBar.style.width = newWidth;
+                lowerCase = 1;
+            }
+            else {
+                progressBar.style.width = currentWidth;//"0%";
+                lowerCase = 0;
+            }
+
+            // uppercase letters
+            if(upperCase === 0) {
+                let pBarWidth = progressBar.style.width;
+                let currentWidth = parseInt(pBarWidth.substring(0, pBarWidth.length - 1));
+                currentWidth = currentWidth + 25;
+                let newWidthString = currentWidth.toString();
+                newWidth = newWidthString.concat("%");
+                console.log(newWidth);
+            } else {newWidth = progressBar.style.width;}
+
+            if (passField.value.match(upperCaseLetters)) {
+                progressBar.style.width = newWidth;
+                upperCase = 1;
+            }
+            else {
+                progressBar.style.width = "0%";
+                upperCase = 0;
+            }
+
+            // special characters
+            if(specialChara === 0) {
+                let pBarWidth = progressBar.style.width;
+                let currentWidth = parseInt(pBarWidth.substring(0, pBarWidth.length - 1));
+                currentWidth = currentWidth + 25;
+                let newWidthString = currentWidth.toString();
+                newWidth = newWidthString.concat("%");
+                console.log(newWidth);
+            } else {newWidth = progressBar.style.width;}
+
+            if (passField.value.match(specialCharacters)) {
+                progressBar.style.width = newWidth;
+                specialChara = 1;
+            }
+            else {
+                progressBar.style.width = "0%";
+                specialChara = 0;
+            }
+        }
+
+    </script>
+
+{% endblock %}
