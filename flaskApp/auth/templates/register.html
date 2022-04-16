@@ -28,7 +28,7 @@
     </style>
 
 
-    <script>
+    <script type="javascript">
         var passField = document.getElementById("password");
         var letter = document.getElementById("letter");
         var lowerCase = 0;
@@ -60,6 +60,11 @@
                 })
                 
                 lowerCase.onChange(function (v){
+                    if (v === 0) {setProgressBarWidth(id,-25);}
+                    else {setProgressBarWidth(id,+25)}
+                })
+
+                upperCase.onChange(function (v){
                     if (v === 0) {setProgressBarWidth(id,-25);}
                     else {setProgressBarWidth(id,+25)}
                 })
