@@ -1,6 +1,6 @@
 FROM python:3.8-buster
 COPY requirements.txt .
-ENV FLASK_APP=app
+ENV FLASK_APP=flaskApp
 ENV PORT=5000
 ENV FLASK_RUN_HOST=0.0.0.0
 ENV FLASK_ENV=development
@@ -12,4 +12,4 @@ RUN apt-get update &&\
     adduser myuser
 WORKDIR /home/myuser
 COPY --chown=myuser:myuser . .
-CMD gunicorn -w 4 --bind 0.0.0.0:$PORT "app:create_app()"
+CMD gunicorn -w 4 --bind 0.0.0.0:$PORT "flaskApp:create_app()"
