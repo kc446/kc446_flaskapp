@@ -1,6 +1,6 @@
 FROM python:3.8-buster
 COPY requirements.txt .
-ENV FLASK_APP=flaskApp
+ENV FLASK_APP=app
 ENV PORT=5000
 ENV FLASK_RUN_HOST=0.0.0.0
 ENV FLASK_ENV=production
