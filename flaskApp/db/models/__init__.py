@@ -1,14 +1,14 @@
 from datetime import datetime
 
 from sqlalchemy.orm import relationship
+from sqlalchemy_serializer import SerializerMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from flaskApp.db import db
 from flask_login import UserMixin
-from flask_login._compat import unicode
 
 
-class User(UserMixin, db.Model):
+class User(UserMixin, db.Model, SerializerMixin):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -17,7 +17,10 @@ class User(UserMixin, db.Model):
     authenticated = db.Column(db.Boolean, default=False)
     registered_on = db.Column('registered_on', db.DateTime)
     active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
-    roles = db.relationship('Role', secondary='user_roles')
+    #roles = db.relationship('Role', secondary='user_roles')
+    is_admin = db.Column('is_admin', db.Boolean(), nullable=False, server_default='0')
+    songs = db.relationship("Song", back_populates="user", cascade="all, delete")
+    locations = db.relationship("Location", back_populates="user", cascade="all, delete")
 
     def __init__(self, email, password):
         self.email = email
@@ -34,7 +37,7 @@ class User(UserMixin, db.Model):
         return False
 
     def get_id(self):
-        return unicode(self.id)
+        return self.id
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -58,8 +61,10 @@ class User(UserMixin, db.Model):
     #     user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
     #     role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
 
-class Location():
+class Location(db.Model, SerializerMixin):
     __tablename__ = 'locations'
+    serialize_only = ("title", "longitude", "latitude")
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(300), nullable=True, unique=False)
     longitude = db.Column(db.String(300), nullable=True, unique=False)
@@ -74,7 +79,14 @@ class Location():
         self.latitude = latitude
         self.population = population
 
-class Song(db.Model):
+    def serialize(self):
+        return {
+            'title': self.title,
+            'long': self.longitude,
+            'lat': self.latitude,
+        }
+
+class Song(db.Model, SerializerMixin):
     __tablename__ = 'songs'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(300), nullable=True, unique=False)
