@@ -11,7 +11,6 @@ class Config(object):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     UPLOAD_FOLDER = './uploads'
 
-
 class ProductionConfig(Config):
     pass
 

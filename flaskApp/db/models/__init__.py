@@ -5,7 +5,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from flaskApp.db import db
 from flask_login import UserMixin
-from flask_login._compat import unicode
 
 
 class User(UserMixin, db.Model):
@@ -17,7 +16,10 @@ class User(UserMixin, db.Model):
     authenticated = db.Column(db.Boolean, default=False)
     registered_on = db.Column('registered_on', db.DateTime)
     active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
-    roles = db.relationship('Role', secondary='user_roles')
+    #roles = db.relationship('Role', secondary='user_roles')
+    is_admin = db.Column('is_admin', db.Boolean(), nullable=False, server_default='0')
+    songs = db.relationship("Song", back_populates="user", cascade="all, delete")
+    locations = db.relationship("Location", back_populates="user", cascade="all, delete")
 
     def __init__(self, email, password):
         self.email = email
@@ -34,7 +36,7 @@ class User(UserMixin, db.Model):
         return False
 
     def get_id(self):
-        return unicode(self.id)
+        return self.id
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
