@@ -8,7 +8,7 @@ class Config(object):
     BOOTSTRAP_BOOTSWATCH_THEME = 'Simplex'
     db_dir = "database/db.sqlite"
     SQLALCHEMY_DATABASE_URL = "sqlite:///" + os.path.abspath(db_dir)
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = './uploads'
 
 class ProductionConfig(Config):

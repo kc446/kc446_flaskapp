@@ -6,7 +6,6 @@ from flask_bootstrap import Bootstrap5
 from flask_wtf.csrf import CSRFProtect
 
 import flask_login
-from flaskApp import db, auth, simple_pages
 from flaskApp.auth import auth
 from flaskApp.cli import create_database, create_log_folder
 from flaskApp.context_processors import utility_text_processors
@@ -19,9 +18,9 @@ from flaskApp.songs import songs
 
 login_manager = flask_login.LoginManager()
 
-def create_app(): #(test_config=None):
+def create_app():
     """Create and configure an instance of the Flask application."""
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__)
 
     #trying something here to see if it's the port for some reason
     if __name__ == "__main__":
@@ -29,11 +28,11 @@ def create_app(): #(test_config=None):
         app.run(host='0.0.0.0', port=port)
 
     if app.config["ENV"] == "production":
-        app.config.from_object("app.config.ProductionConfig")
+        app.config.from_object("flaskApp.config.ProductionConfig")
     elif app.config["ENV"] == "development":
-        app.config.from_object("app.config.DevelopmentConfig")
+        app.config.from_object("flaskApp.config.DevelopmentConfig")
     elif app.config["ENV"] == "testing":
-        app.config.from_object("app.config.TestingConfig")
+        app.config.from_object("flaskApp.config.TestingConfig")
 
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
@@ -58,8 +57,6 @@ def create_app(): #(test_config=None):
     app.register_blueprint(error_handlers)
     app.register_blueprint(songs)
     app.register_blueprint(map)
-
-    app.register_error_handler(404, page_not_found)
 
     app.add_url_rule("/", endpoint="index")
     app.context_processor(utility_text_processors)
