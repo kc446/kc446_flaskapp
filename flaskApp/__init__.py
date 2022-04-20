@@ -1,7 +1,7 @@
 """A simple Flask web app."""
 import os
 
-from flask import Flask, render_template
+from flask import Flask
 from flask_bootstrap import Bootstrap5
 from flask_wtf.csrf import CSRFProtect
 
@@ -19,12 +19,14 @@ from flaskApp.songs import songs
 
 login_manager = flask_login.LoginManager()
 
-def page_not_found(e):
-    return render_template("404.html"), 404
-
 def create_app(): #(test_config=None):
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True)
+
+    #trying something here to see if it's the port for some reason
+    if __name__ == "__main__":
+        port = int(os.environ.get("PORT", 5000))
+        app.run(host='0.0.0.0', port=port)
 
     if app.config["ENV"] == "production":
         app.config.from_object("app.config.ProductionConfig")
@@ -38,21 +40,6 @@ def create_app(): #(test_config=None):
     csrf = CSRFProtect(app)
     csrf.exempt(auth)
     bootstrap = Bootstrap5(app)
-
-    #app.config.from_mapping(
-        # a default secret that should be overridden by instance config
-        #SECRET_KEY="dev",
-        # store the database in the instance folder
-        #DATABASE=os.path.join(app.instance_path, "flaskr.sqlite"),
-    #)
-
-    #if test_config is None:
-        # load the instance config, if it exists, when not testing
-        #app.config.from_pyfile("config.py", silent=True)
-    #else:
-        # load the test config if passed in
-        #app.config.update(test_config)
-        # ensure the instance folder exists
 
     try:
         os.makedirs(app.instance_path)
