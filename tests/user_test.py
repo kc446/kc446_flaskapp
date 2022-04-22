@@ -9,9 +9,10 @@ def test_adding_user(application, add_user):
     with application.app_context():
         # assert db.session.query(User).count() == 1
         # assert db.session.query(Song).count() == 0
+
         #showing how to add a record
         #create a record
-        #user = User('kc446@njit.edu', 'pwtesting')
+        #user = User('keith@webizly.com', 'testtest')
         #add it to get ready to be committed
         #db.session.add(user)
         #call the commit
@@ -44,6 +45,7 @@ def test_adding_user(application, add_user):
         db.session.delete(user)
         # assert db.session.query(User).count() == 0
         # assert db.session.query(Song).count() == 0
+
 
 
 
