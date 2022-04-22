@@ -37,9 +37,8 @@ def browse_locations_datatables():
 @map.route('/api/locations/', methods=['GET'])
 def api_locations():
     data = current_user.locations
-    data = jsonify(data=[location.serialize() for location in data])
     try:
-        return data
+        return jsonify(data=[location.serialize() for location in data])
     except TemplateNotFound:
         abort(404)
 
@@ -71,3 +70,29 @@ def location_upload():
         current_user.locations = list_of_locations
         db.session.commit()
         return redirect(url_for('map.browse_locations'))
+
+    def edit_location(id):
+        location = Location.query.get(id)
+        form = user_edit_form(obj=location)
+        if form.validate_on_submit():
+            location.title = form.title.data
+            location.longitude = form.longitude.data
+            location.latitude = form.latitude.data
+            location.population = int(form.population.data)
+            db.session.add(location)
+            db.session.commit()
+            flash("Location Info Edited Successfully",'Success!')
+            return redirect(url_for('browse_locations'))
+        return render_template('edit_location.html', form=form)
+
+    @map.route('/locations/delete', methods=['POST'])
+    @login_required
+    def delete_location(user_id):
+        location = Location.query.get(user_id)
+        if user.id == current_user.id:
+            flash("You can't delete yourself!")
+            return redirect(url_for('browse_locations'), 302)
+        db.session.delete(location)
+        db.session.commit()
+        flash("Location Deleted", 'Success!')
+        return redirect(url_for('auth.browse_users'), 302)
