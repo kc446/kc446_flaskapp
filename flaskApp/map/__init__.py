@@ -1,4 +1,5 @@
 import csv
+import logging
 import os
 
 from flask import Blueprint, render_template, abort, url_for, current_app, jsonify
@@ -16,7 +17,7 @@ map = Blueprint('map', __name__, template_folder='templates')
 @map.route('/locations/<int:page>', methods=['GET'])
 def browse_locations(page):
     page = page
-    per_page = 10
+    per_page = 1000
     pagination = Location.query.paginate(page, per_page, error_out=False)
     data = pagination.items
     try:
@@ -26,9 +27,7 @@ def browse_locations(page):
 
 @map.route('/locations_datatables/', methods=['GET'])
 def browse_locations_datatables():
-
     data = Location.query.all()
-
     try:
         return render_template('browse_locations_datatables.html',data=data)
     except TemplateNotFound:
@@ -55,6 +54,8 @@ def map_locations():
 def location_upload():
     form = csv_upload()
     if form.validate_on_submit():
+        log = logging.getLogger("myApp")
+
         filename = secure_filename(form.file.data.filename)
         filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
         form.file.data.save(filepath)
@@ -69,3 +70,7 @@ def location_upload():
         current_user.locations = list_of_locations
         db.session.commit()
         return redirect(url_for('map.browse_locations'))
+    try:
+        return render_template('upload_locations.html', form=form)
+    except TemplateNotFound:
+        abort(404)
