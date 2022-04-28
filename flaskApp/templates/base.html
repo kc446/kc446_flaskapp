@@ -32,29 +32,31 @@
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <div class="navbar-nav mr-auto">
                         {% if current_user.is_authenticated %}
-                            {{ render_nav_item('auth.dashboard','Dashboard' ) }}
-                            {{ render_nav_item('auth.browse_users','User Management' ) }}
-
+                            {{ render_nav_item('auth.dashboard','Dashboard') }}
+                            {{ render_nav_item('songs.songs_browse','My Songs') }}
+                            {{ render_nav_item('songs.songs_upload','Upload Songs') }}
+                            {{ render_nav_item('map.browse_locations', 'Locations') }}
                         {% else %}
                             {{ render_nav_item('simple_pages.index', 'Home') }}
                         {% endif %}
-
+                        {{ render_nav_item('map.map_locations','Map') }}
                         {{ render_nav_item('simple_pages.about','About') }}
                         {{ render_nav_item('simple_pages.welcome','Welcome') }}
                     </div>
                 </div>
                 <div class="navbar-nav d-flex">
                     {% if current_user.is_authenticated %}
-                        {{ render_nav_item('auth.edit_profile', 'My Profile') }}
-                        <!--apparently this is all you need and the dropdown is useless. i'll keep it for now JUST to be safe-->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                My Account
-                            </a>
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">My Account</a>
                             <ul class="dropdown-menu " aria-labelledby="navbarDarkDropdownMenuLink">
                                 <li><a class="dropdown-item" href="{{ url_for("auth.edit_profile") }}">Manage Profile</a></li>
                                 <li><a class="dropdown-item" href="{{ url_for("auth.edit_account") }}">Manage Account</a></li>
+                                {% if current_user.is_admin %}
+                                    <li><a class="dropdown-item" href="{{ url_for("auth.browse_users") }}">User Mgmt</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for("map.browse_locations") }}">Loc. Mgmt</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for("songs.songs_browse") }}">Song. Mgmt</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for("map.browse_locations_datatables") }}">Loc. Mgmt(data)</a></li>
+                                    {% endif %}
                                 <li><a class="dropdown-item" href="{{ url_for("auth.logout") }}">Logout</a></li>
                             </ul>
                         </li>
@@ -71,7 +73,6 @@
         {{ render_messages() }}
     </div>
     <div class="row mt-5">
-
         {% block content %}
         {% endblock %}
     </div>

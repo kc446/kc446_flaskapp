@@ -1,5 +1,4 @@
 import csv
-import logging
 import os
 
 from flask import Blueprint, render_template, abort, url_for, current_app, jsonify
@@ -12,6 +11,7 @@ from flaskApp.songs.forms import csv_upload
 from flask_login import current_user, login_required
 
 map = Blueprint('map', __name__, template_folder='templates')
+
 @map.route('/locations', methods=['GET'], defaults={"page": 1})
 @map.route('/locations/<int:page>', methods=['GET'])
 def browse_locations(page):
@@ -36,24 +36,19 @@ def browse_locations_datatables():
 
 @map.route('/api/locations/', methods=['GET'])
 def api_locations():
-    data = current_user.locations
-    data = jsonify(data=[location.serialize() for location in data])
+    data = Location.query.all()
     try:
-        return data
+        return jsonify(data=[location.serialize() for location in data])
     except TemplateNotFound:
         abort(404)
 
 @map.route('/locations/map', methods=['GET'])
 def map_locations():
     google_api_key = current_app.config.get('GOOGLE_API_KEY')
-    log = logging.getLogger("myApp")
-    log.info(google_api_key)
     try:
         return render_template('map_locations.html',google_api_key=google_api_key)
     except TemplateNotFound:
         abort(404)
-
-
 
 @map.route('/locations/upload', methods=['POST', 'GET'])
 @login_required
@@ -66,8 +61,11 @@ def location_upload():
         list_of_locations = []
         with open(filepath) as file:
             csv_file = csv.DictReader(file)
+            list_of_locations = []
             for row in csv_file:
-                list_of_locations.append(Location(row['location'],row['longitude'],row['latitude'],row['population']))
+                location = Location.query.filter_by(title=row['location']).first()
+                if location is None:
+                    list_of_locations.append(Location(row['location'],row['longitude'],row['latitude'],row['population']))
         current_user.locations = list_of_locations
         db.session.commit()
         return redirect(url_for('map.browse_locations'))

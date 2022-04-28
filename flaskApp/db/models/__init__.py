@@ -1,31 +1,38 @@
 from datetime import datetime
 
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy_serializer import SerializerMixin
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from flaskApp.db import db
 from flask_login import UserMixin
 
+Base = declarative_base()
 
-class User(UserMixin, db.Model, SerializerMixin):
+location_user = db.Table('location_user', db.Model.metadata,
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+    db.Column('location_id', db.Integer, db.ForeignKey('locations.id'))
+)
+
+class User(UserMixin, db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(300), nullable=False, unique=True)
+    password = db.Column(db.String(300), nullable=False)
+    about = db.Column(db.String(300), nullable=True, unique=False)
     authenticated = db.Column(db.Boolean, default=False)
     registered_on = db.Column('registered_on', db.DateTime)
     active = db.Column('is_active', db.Boolean(), nullable=False, server_default='1')
-    #roles = db.relationship('Role', secondary='user_roles')
     is_admin = db.Column('is_admin', db.Boolean(), nullable=False, server_default='0')
     songs = db.relationship("Song", back_populates="user", cascade="all, delete")
-    locations = db.relationship("Location", back_populates="user", cascade="all, delete")
+    locations = db.relationship("Location", secondary=location_user, backref="users")
 
-    def __init__(self, email, password):
+    def __init__(self, email, password, is_admin):
         self.email = email
         self.password = password
         self.registered_on = datetime.utcnow()
+        self.is_admin = is_admin
 
     def is_authenticated(self):
         return True
@@ -48,30 +55,15 @@ class User(UserMixin, db.Model, SerializerMixin):
     def __repr__(self):
         return '<User %r>' % self.email
 
-    # Define the Role data-model
-    # class Role(db.Model):
-    #     __tablename__ = 'roles'
-    #     id = db.Column(db.Integer(), primary_key=True)
-    #     name = db.Column(db.String(50), unique=True)
-
-    # Define the UserRoles association table
-    # class UserRoles(db.Model):
-    #     __tablename__ = 'user_roles'
-    #     id = db.Column(db.Integer(), primary_key=True)
-    #     user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
-    #     role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
-
 class Location(db.Model, SerializerMixin):
     __tablename__ = 'locations'
-    serialize_only = ("title", "longitude", "latitude")
+    #serialize_only = ("title", "longitude", "latitude")
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(300), nullable=True, unique=False)
     longitude = db.Column(db.String(300), nullable=True, unique=False)
     latitude = db.Column(db.String(300), nullable=True, unique=False)
     population = db.Column(db.Integer, nullable=True, unique=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    user = relationship("User", back_populates="locations", uselist=False)
 
     def __init__(self, title, longitude, latitude, population):
         self.title = title
@@ -84,6 +76,7 @@ class Location(db.Model, SerializerMixin):
             'title': self.title,
             'long': self.longitude,
             'lat': self.latitude,
+            'population': self.population
         }
 
 class Song(db.Model, SerializerMixin):
@@ -97,4 +90,3 @@ class Song(db.Model, SerializerMixin):
     def __init__(self, title, artist):
         self.title = title
         self.artist = artist
-
