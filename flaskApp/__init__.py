@@ -13,7 +13,7 @@ from flaskApp.context_processors import utility_text_processors
 from flaskApp.db import database
 from flaskApp.db import db
 from flaskApp.db.models import User
-from flaskApp.exceptions import error_handlers
+from flaskApp.error_handlers import error_handlers
 from flaskApp.logging_config import log_con
 from flaskApp.map import map
 from flaskApp.simple_pages import simple_pages
