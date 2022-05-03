@@ -7,7 +7,7 @@ from flask_mail import Mail
 from flask_wtf.csrf import CSRFProtect
 
 import flask_login
-from exceptions.error_handlers import error_handlers
+from exceptions import error_handlers
 from flaskApp.auth import auth
 from flaskApp.cli import create_database
 from flaskApp.context_processors import utility_text_processors
