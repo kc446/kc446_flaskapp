@@ -2,7 +2,7 @@ import os
 
 from click.testing import CliRunner
 
-from flaskApp import create_database
+from flaskApp.cli import create_database
 
 runner = CliRunner()
 

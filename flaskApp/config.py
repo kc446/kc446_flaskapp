@@ -15,8 +15,6 @@ class Config(object):
     LOG_DIR = os.path.join(BASE_DIR, '../logs')
     MAIL_SERVER = 'smtp.mailtrap.io'
     MAIL_PORT = 2525
-    MAIL_USERNAME = os.getenv('MAIL_USERNAME','NOKEY')
-    MAIL_PASSWORD  = os.getenv('MAIL_PASSWORD', 'NOKEY')
     MAIL_USE_TLS = True
     MAIL_USE_SSL = False
 

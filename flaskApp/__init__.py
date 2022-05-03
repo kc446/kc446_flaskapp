@@ -7,13 +7,13 @@ from flask_mail import Mail
 from flask_wtf.csrf import CSRFProtect
 
 import flask_login
+from exceptions.error_handlers import error_handlers
 from flaskApp.auth import auth
 from flaskApp.cli import create_database
 from flaskApp.context_processors import utility_text_processors
 from flaskApp.db import database
 from flaskApp.db import db
 from flaskApp.db.models import User
-from flaskApp.error_handlers import error_handlers
 from flaskApp.logging_config import log_con
 from flaskApp.map import map
 from flaskApp.simple_pages import simple_pages
